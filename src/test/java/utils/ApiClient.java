@@ -46,11 +46,4 @@ public class ApiClient {
         return doPostRequest("/comments",comment);
     }
 
-    public int getMaxValueForUserId(List<Posts> posts){
-      return  posts.stream().max(Comparator.comparingInt(v->v.userId)).get().userId;
-    }
-
-    public int getMaxValueForId(List<Posts> posts){
-        return  posts.stream().max(Comparator.comparingInt(v->v.id)).get().id;
-    }
 }

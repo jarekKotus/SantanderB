@@ -8,6 +8,7 @@ import org.junit.Test;
 import utils.ApiClient;
 import utils.Comments;
 import utils.Posts;
+import utils.GetValueMethods;
 
 
 import java.util.List;
@@ -23,21 +24,21 @@ public class ApiTests {
     @Test
     public void getMaxValueForUserId() {
         List<Posts> posts = apiClient.getPosts();
-        int max = apiClient.getMaxValueForUserId(posts);
+        int max = GetValueMethods.getMaxValueForUserId(posts);
         LOGGER.info(String.valueOf(max));
     }
 
     @Test
     public void getMaxValueForId() {
         List <Posts> posts = apiClient.getPostsByUser("10");
-        int max = apiClient.getMaxValueForId(posts);
+        int max = GetValueMethods.getMaxValueForId(posts);
         LOGGER.info(String.valueOf(max));
     }
 
     @Test
     public void addNewCommentForPostId() throws JsonProcessingException {
         List <Posts> posts = apiClient.getPostsByUser("10");
-        int max = apiClient.getMaxValueForId(posts);
+        int max = GetValueMethods.getMaxValueForId(posts);
         LOGGER.info(String.valueOf(max));
 
         Comments comment = new Comments();
