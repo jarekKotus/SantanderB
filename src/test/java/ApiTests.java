@@ -13,25 +13,29 @@ public class ApiTests {
 
     private final static Logger LOGGER = Logger.getLogger(ApiTests.class.getName());
     Faker faker = new Faker();
-
+    ApiClient apiClient = new ApiClient("https://jsonplaceholder.typicode.com");
+//post i comments
     @Test
     public void getMaxValueForUserId() {
-        List<Integer> jsonResponse = ApiClient.doGetRequest("https://jsonplaceholder.typicode.com/posts/", 200).jsonPath().getList("userId");
-        int max = jsonResponse.stream().max(Integer::compareTo).get();
+        Response posts = apiClient.getPosts();
+        List<Integer> userIds = posts.jsonPath().getList("userId");
+        int max = userIds.stream().max(Integer::compareTo).get();
         LOGGER.info(String.valueOf(max));
     }
 
     @Test
     public void getMaxValueForId() {
-        List<Integer> jsonResponse = ApiClient.doGetRequest("https://jsonplaceholder.typicode.com/posts?userId=10", 200).jsonPath().getList("id");
-        int max = jsonResponse.stream().max(Integer::compareTo).get();
+        Response posts = apiClient.getPostsByUser("10");
+        List<Integer> postIds = posts.jsonPath().getList("id");
+        int max = postIds.stream().max(Integer::compareTo).get();
         LOGGER.info(String.valueOf(max));
     }
 
     @Test
     public void addNewCommentForPostId() {
-        List<Integer> jsonResponse = ApiClient.doGetRequest("https://jsonplaceholder.typicode.com/posts?userId=10", 200).jsonPath().getList("id");
-        int max = jsonResponse.stream().max(Integer::compareTo).get();
+        Response posts = apiClient.getPostsByUser("10");
+        List<Integer> postIds = posts.jsonPath().getList("id");
+        int max = postIds.stream().max(Integer::compareTo).get();
         LOGGER.info(String.valueOf(max));
 
         JSONObject json = new JSONObject();
@@ -40,8 +44,7 @@ public class ApiTests {
         json.put("email", faker.name().username() + "@gmail.com");
         json.put("body", faker.chuckNorris().fact());
 
-        Response res = ApiClient.doPostRequest("https://jsonplaceholder.typicode.com/comments",
-                json.toString(), 201);
+        Response res = apiClient.addComment(json.toString());
         LOGGER.info(res.jsonPath().getString("$"));
     }
 }

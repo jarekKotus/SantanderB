@@ -11,20 +11,37 @@ import static com.jayway.restassured.RestAssured.given;
 
 public class ApiClient {
 
-    public static Response doGetRequest(String endpoint, int statusCode) {
+    String baseURL;
+
+    public ApiClient(String baseURL) {
+        this.baseURL = baseURL;
+    }
+
+    public Response doGetRequest(String endpoint) {
         RestAssured.defaultParser = Parser.JSON;
         return
                 given().headers("Content-Type", ContentType.JSON, "Accept", ContentType.JSON).
-                        when().get(endpoint).
-                        then().statusCode(statusCode).contentType(ContentType.JSON).extract().response();
+                        when().get(this.baseURL + endpoint).
+                        then().contentType(ContentType.JSON).extract().response();
     }
 
-    public static Response doPostRequest(String endpoint, String stringBody, int statusCode) {
+    public Response doPostRequest(String endpoint, String stringBody) {
         RestAssured.defaultParser = Parser.JSON;
         return
                 given().body(stringBody).headers("Content-Type", ContentType.JSON, "Accept", ContentType.JSON).
-                        when().post(endpoint).
-                        then().statusCode(statusCode).contentType(ContentType.JSON).extract().response();
+                        when().post(this.baseURL + endpoint).
+                        then().contentType(ContentType.JSON).extract().response();
     }
 
+    public Response getPosts() {
+        return doGetRequest("/posts");
+    }
+
+    public Response getPostsByUser(String userId) {
+        return doGetRequest("/posts?userId=" + userId);
+    }
+
+    public Response addComment(String comment) {
+        return doPostRequest("/comments", comment);
+    }
 }
