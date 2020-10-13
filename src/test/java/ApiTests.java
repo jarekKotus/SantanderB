@@ -47,8 +47,7 @@ public class ApiTests {
         comment.email = faker.name().username() + "@gmail.com";
         comment.body = faker.chuckNorris().fact();
 
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        Response res = apiClient.addComment(ow.writeValueAsString(comment));
+        Response res = apiClient.addComment(comment);
         LOGGER.info(res.jsonPath().get().toString());
     }
 }

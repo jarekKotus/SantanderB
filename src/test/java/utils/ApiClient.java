@@ -1,5 +1,8 @@
 package utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.parsing.Parser;
@@ -42,8 +45,9 @@ public class ApiClient {
         return Arrays.asList( doGetRequest("/posts?userId=" +userId).as(Posts[].class));
     }
 
-    public Response addComment(String comment){
-        return doPostRequest("/comments",comment);
+    public Response addComment(Comments comment) throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        return doPostRequest("/comments",ow.writeValueAsString(comment));
     }
 
 }
